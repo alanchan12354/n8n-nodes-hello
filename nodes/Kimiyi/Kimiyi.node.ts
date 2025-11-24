@@ -30,8 +30,9 @@ export class Kimiyi implements INodeType {
 				required: true,
 			},
 		],
+
 		properties: [
-			
+
 			{
 				displayName: 'Operation',
 				name: 'operation',
@@ -39,49 +40,41 @@ export class Kimiyi implements INodeType {
 				default: 'uploadDocument',
 				noDataExpression: true,
 				options: [
-					// --- Actions ---
+					// Actions
 					{
 						name: 'Upload Document (Train)',
 						value: 'uploadDocument',
-						description: 'Upload a cloud file for AI training',
 					},
 					{
 						name: 'Update Document (Retrain)',
 						value: 'updateDocument',
-						description: 'Update an existing cloud file and retrain',
 					},
 					{
 						name: 'Auto Reply Messenger',
 						value: 'autoReplyMessenger',
-						description: 'Send automated reply to a Messenger user',
 					},
 
-					// --- Triggers ---
+					// Triggers
 					{
 						name: 'Trigger: Send Message',
 						value: 'sendMessageTrigger',
-						description: 'Trigger when a message is sent',
 					},
 					{
 						name: 'Trigger: Welcome Message',
 						value: 'welcomeMessageTrigger',
-						description: 'Trigger when welcome message event fires',
 					},
 					{
 						name: 'Trigger: Survey Message',
 						value: 'surveyMessageTrigger',
-						description: 'Trigger when survey event happens',
 					},
 					{
 						name: 'Trigger: Fallback Message',
 						value: 'fallbackMessageTrigger',
-						description: 'Trigger when fallback event happens',
 					},
 				],
 			},
-			// ----------------------
+
 			// Upload Document Fields
-			// ----------------------
 			{
 				displayName: 'Platform',
 				name: 'platform',
@@ -94,9 +87,7 @@ export class Kimiyi implements INodeType {
 				],
 				required: true,
 				displayOptions: {
-					show: {
-						operation: ['uploadDocument'],
-					},
+					show: { operation: ['uploadDocument'] },
 				},
 			},
 			{
@@ -104,13 +95,10 @@ export class Kimiyi implements INodeType {
 				name: 'doc_link',
 				type: 'string',
 				default: '',
-				placeholder: 'https://...',
 				required: true,
-				description: 'Link to the cloud file to upload',
+				placeholder: 'https://...',
 				displayOptions: {
-					show: {
-						operation: ['uploadDocument'],
-					},
+					show: { operation: ['uploadDocument'] },
 				},
 			},
 			{
@@ -120,9 +108,7 @@ export class Kimiyi implements INodeType {
 				default: '',
 				required: true,
 				displayOptions: {
-					show: {
-						operation: ['uploadDocument'],
-					},
+					show: { operation: ['uploadDocument'] },
 				},
 			},
 			{
@@ -130,12 +116,9 @@ export class Kimiyi implements INodeType {
 				name: 'file_type',
 				type: 'string',
 				default: '',
-				placeholder: 'application/pdf',
 				required: true,
 				displayOptions: {
-					show: {
-						operation: ['uploadDocument'],
-					},
+					show: { operation: ['uploadDocument'] },
 				},
 			},
 			{
@@ -145,9 +128,7 @@ export class Kimiyi implements INodeType {
 				default: 0,
 				required: true,
 				displayOptions: {
-					show: {
-						operation: ['uploadDocument'],
-					},
+					show: { operation: ['uploadDocument'] },
 				},
 			},
 
@@ -155,14 +136,46 @@ export class Kimiyi implements INodeType {
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-		const items: INodeExecutionData[] = [];
 
-		items.push({
-			json: {
-				status: 'Kimiyi node loaded successfully',
-			},
-		});
+		let returnItems: INodeExecutionData[] = [];
 
-		return this.prepareOutputData(items);
+		const itemIndex = 0;
+		const operation = this.getNodeParameter('operation', itemIndex) as string;
+
+		const credentials = await this.getCredentials('kimiyiApi');
+		const apiKey = credentials.apiKey as string;
+
+		// ========== UPLOAD DOCUMENT ==========
+		if (operation === 'uploadDocument') {
+
+			const platform  = this.getNodeParameter('platform', itemIndex) as string;
+			const doc_link  = this.getNodeParameter('doc_link', itemIndex) as string;
+			const file_name = this.getNodeParameter('file_name', itemIndex) as string;
+			const file_type = this.getNodeParameter('file_type', itemIndex) as string;
+			const file_size = this.getNodeParameter('file_size', itemIndex) as number;
+
+			const body = {
+				platform,
+				doc_link,
+				file_name,
+				file_type,
+				file_size,
+			};
+
+			const response = await this.helpers.httpRequest({
+				method: 'POST',
+				url: 'https://internalwebapi-dev.kimiyi.ai/api/Zapier/UploadFile',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-API-KEY': apiKey,
+				},
+				body,
+				json: true,
+			});
+
+			returnItems.push({ json: response });
+		}
+
+		return this.prepareOutputData(returnItems);
 	}
 }
