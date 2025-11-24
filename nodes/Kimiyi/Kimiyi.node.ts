@@ -201,8 +201,51 @@ export class Kimiyi implements INodeType {
 					},
 				},
 			},
-
-
+			// ----------------------
+			// Auto Reply Messenger Fields
+			// ----------------------
+			{
+				displayName: 'PSID (Facebook User ID)',
+				name: 'psid',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: '123456789012345',
+				displayOptions: {
+					show: {
+						operation: ['autoReplyMessenger'],
+					},
+				},
+			},
+			{
+				displayName: 'Sender Name',
+				name: 'sender',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'John Doe',
+				displayOptions: {
+					show: {
+						operation: ['autoReplyMessenger'],
+					},
+				},
+			},
+			{
+				displayName: 'Message Text',
+				name: 'textInput',
+				type: 'string',
+				default: '',
+				typeOptions: {
+					rows: 4,
+				},
+				required: true,
+				placeholder: 'Hello! How can I help you?',
+				displayOptions: {
+					show: {
+						operation: ['autoReplyMessenger'],
+					},
+				},
+			},
 		],
 	};
 
@@ -267,6 +310,33 @@ export class Kimiyi implements INodeType {
 			const response = await this.helpers.httpRequest({
 				method: 'POST',
 				url: 'https://internalwebapi-dev.kimiyi.ai/api/Zapier/UpdateFile',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-API-KEY': apiKey,
+				},
+				body,
+				json: true,
+			});
+
+			returnItems.push({ json: response });
+		}
+
+		// ========== AUTO REPLY MESSENGER ==========
+		if (operation === 'autoReplyMessenger') {
+
+			const psid = this.getNodeParameter('psid', itemIndex) as string;
+			const sender = this.getNodeParameter('sender', itemIndex) as string;
+			const textInput = this.getNodeParameter('textInput', itemIndex) as string;
+
+			const body = {
+				psid,
+				sender,
+				textInput,
+			};
+
+			const response = await this.helpers.httpRequest({
+				method: 'POST',
+				url: 'https://internalwebapi-dev.kimiyi.ai/api/Zapier/AutoReply',
 				headers: {
 					'Content-Type': 'application/json',
 					'X-API-KEY': apiKey,
