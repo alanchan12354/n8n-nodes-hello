@@ -79,6 +79,78 @@ export class Kimiyi implements INodeType {
 					},
 				],
 			},
+			// ----------------------
+			// Upload Document Fields
+			// ----------------------
+			{
+				displayName: 'Platform',
+				name: 'platform',
+				type: 'options',
+				default: 'Dropbox',
+				options: [
+					{ name: 'Dropbox', value: 'Dropbox' },
+					{ name: 'OneDrive', value: 'OneDrive' },
+					{ name: 'Google Drive', value: 'Google Drive' },
+				],
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['uploadDocument'],
+					},
+				},
+			},
+			{
+				displayName: 'Document Link',
+				name: 'doc_link',
+				type: 'string',
+				default: '',
+				placeholder: 'https://...',
+				required: true,
+				description: 'Link to the cloud file to upload',
+				displayOptions: {
+					show: {
+						operation: ['uploadDocument'],
+					},
+				},
+			},
+			{
+				displayName: 'File Name',
+				name: 'file_name',
+				type: 'string',
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['uploadDocument'],
+					},
+				},
+			},
+			{
+				displayName: 'File Type (MIME)',
+				name: 'file_type',
+				type: 'string',
+				default: '',
+				placeholder: 'application/pdf',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['uploadDocument'],
+					},
+				},
+			},
+			{
+				displayName: 'File Size (Bytes)',
+				name: 'file_size',
+				type: 'number',
+				default: 0,
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['uploadDocument'],
+					},
+				},
+			},
+
 		],
 	};
 
