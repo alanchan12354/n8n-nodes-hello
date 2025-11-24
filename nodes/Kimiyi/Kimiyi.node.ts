@@ -16,12 +16,22 @@ export class Kimiyi implements INodeType {
 		group: ['transform'],
 		version: 1,
 		description: 'Kimiyi AI Node',
+
 		defaults: {
 			name: 'Kimiyi',
 		},
+
 		inputs: [NodeConnectionTypes.Main],
 		outputs: [NodeConnectionTypes.Main],
+
+		credentials: [
+			{
+				name: 'kimiyiApi',
+				required: true,
+			},
+		],
 		properties: [
+			
 			{
 				displayName: 'Operation',
 				name: 'operation',
