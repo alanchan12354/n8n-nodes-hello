@@ -36,7 +36,8 @@
 		],
 		"nodes": [
 			"dist/nodes/GithubIssues/GithubIssues.node.js",
-			"dist/nodes/Example/Example.node.js"
+			"dist/nodes/Example/Example.node.js",
+			"dist/nodes/Kimiyi/Kimiyi.node.js"
 		]
 	},
 	"devDependencies": {
