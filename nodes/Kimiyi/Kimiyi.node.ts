@@ -32,7 +32,9 @@ export class Kimiyi implements INodeType {
 		],
 
 		properties: [
-
+			// ----------------------------------
+			//         Operations
+			// ----------------------------------
 			{
 				displayName: 'Operation',
 				name: 'operation',
@@ -246,6 +248,74 @@ export class Kimiyi implements INodeType {
 					},
 				},
 			},
+			// ----------------------
+			// Trigger: Send Message
+			// ----------------------
+			{
+				displayName: 'Interval',
+				name: 'interval',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'e.g. 5m or 1h',
+				displayOptions: {
+					show: {
+						operation: ['sendMessageTrigger'],
+					},
+				},
+			},
+
+			// ----------------------
+			// Trigger: Welcome Message
+			// ----------------------
+			{
+				displayName: 'Interval',
+				name: 'interval',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'e.g. 5m or 1h',
+				displayOptions: {
+					show: {
+						operation: ['welcomeMessageTrigger'],
+					},
+				},
+			},
+
+			// ----------------------
+			// Trigger: Survey Message
+			// ----------------------
+			{
+				displayName: 'Interval',
+				name: 'interval',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'e.g. 5m or 1h',
+				displayOptions: {
+					show: {
+						operation: ['surveyMessageTrigger'],
+					},
+				},
+			},
+
+			// ----------------------
+			// Trigger: Fallback Message
+			// ----------------------
+			{
+				displayName: 'Interval',
+				name: 'interval',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'e.g. 5m or 1h',
+				displayOptions: {
+					show: {
+						operation: ['fallbackMessageTrigger'],
+					},
+				},
+			},
+
 		],
 	};
 
@@ -348,6 +418,84 @@ export class Kimiyi implements INodeType {
 			returnItems.push({ json: response });
 		}
 
+		// ========== TRIGGER: SEND MESSAGE ==========
+		if (operation === 'sendMessageTrigger') {
+
+			const interval = this.getNodeParameter('interval', itemIndex) as string;
+
+			const response = await this.helpers.httpRequest({
+				method: 'POST',
+				url: 'https://internalwebapi-dev.kimiyi.ai/api/Zapier/SendMessage',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-API-KEY': apiKey,
+				},
+				body: { interval },
+				json: true,
+			});
+
+			returnItems.push({ json: response });
+		}
+
+
+		// ========== TRIGGER: WELCOME MESSAGE ==========
+		if (operation === 'welcomeMessageTrigger') {
+
+			const interval = this.getNodeParameter('interval', itemIndex) as string;
+
+			const response = await this.helpers.httpRequest({
+				method: 'POST',
+				url: 'https://internalwebapi-dev.kimiyi.ai/api/Zapier/NewWelcomeMessage',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-API-KEY': apiKey,
+				},
+				body: { interval },
+				json: true,
+			});
+
+			returnItems.push({ json: response });
+		}
+
+
+		// ========== TRIGGER: SURVEY MESSAGE ==========
+		if (operation === 'surveyMessageTrigger') {
+
+			const interval = this.getNodeParameter('interval', itemIndex) as string;
+
+			const response = await this.helpers.httpRequest({
+				method: 'POST',
+				url: 'https://internalwebapi-dev.kimiyi.ai/api/Zapier/NewSurveyMessage',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-API-KEY': apiKey,
+				},
+				body: { interval },
+				json: true,
+			});
+
+			returnItems.push({ json: response });
+		}
+
+
+		// ========== TRIGGER: FALLBACK MESSAGE ==========
+		if (operation === 'fallbackMessageTrigger') {
+
+			const interval = this.getNodeParameter('interval', itemIndex) as string;
+
+			const response = await this.helpers.httpRequest({
+				method: 'POST',
+				url: 'https://internalwebapi-dev.kimiyi.ai/api/Zapier/Fallback',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-API-KEY': apiKey,
+				},
+				body: { interval },
+				json: true,
+			});
+
+			returnItems.push({ json: response });
+		}
 
 		return this.prepareOutputData(returnItems);
 	}
