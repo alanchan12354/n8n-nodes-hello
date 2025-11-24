@@ -36,64 +36,48 @@ export class Kimiyi implements INodeType {
 				displayName: 'Operation',
 				name: 'operation',
 				type: 'options',
-				default: 'addDocument',
+				default: 'uploadDocument',
+				noDataExpression: true,
 				options: [
+					// --- Actions ---
 					{
-						name: 'Add New Document',
-						value: 'addDocument',
+						name: 'Upload Document (Train)',
+						value: 'uploadDocument',
+						description: 'Upload a cloud file for AI training',
 					},
 					{
-						name: 'Update Existing Document',
+						name: 'Update Document (Retrain)',
 						value: 'updateDocument',
+						description: 'Update an existing cloud file and retrain',
 					},
 					{
-						name: 'Add & Update Document',
-						value: 'addUpdateDocument',
+						name: 'Auto Reply Messenger',
+						value: 'autoReplyMessenger',
+						description: 'Send automated reply to a Messenger user',
+					},
+
+					// --- Triggers ---
+					{
+						name: 'Trigger: Send Message',
+						value: 'sendMessageTrigger',
+						description: 'Trigger when a message is sent',
 					},
 					{
-						name: 'Auto Reply Message',
-						value: 'autoReplyMessage',
+						name: 'Trigger: Welcome Message',
+						value: 'welcomeMessageTrigger',
+						description: 'Trigger when welcome message event fires',
+					},
+					{
+						name: 'Trigger: Survey Message',
+						value: 'surveyMessageTrigger',
+						description: 'Trigger when survey event happens',
+					},
+					{
+						name: 'Trigger: Fallback Message',
+						value: 'fallbackMessageTrigger',
+						description: 'Trigger when fallback event happens',
 					},
 				],
-			},
-			{
-				displayName: 'Document Name',
-				name: 'documentName',
-				type: 'string',
-				default: '',
-				description: 'Name of the document to create',
-				displayOptions: {
-					show: {
-						operation: ['addDocument'],
-					},
-				},
-			},
-			{
-				displayName: 'Content',
-				name: 'content',
-				type: 'string',
-				typeOptions: {
-					rows: 5,
-				},
-				default: '',
-				description: 'Text content of the document',
-				displayOptions: {
-					show: {
-						operation: ['addDocument'],
-					},
-				},
-			},
-			{
-				displayName: 'File URL (Optional)',
-				name: 'fileUrl',
-				type: 'string',
-				default: '',
-				description: 'URL of a file to include in the document (optional)',
-				displayOptions: {
-					show: {
-						operation: ['addDocument'],
-					},
-				},
 			},
 		],
 	};
