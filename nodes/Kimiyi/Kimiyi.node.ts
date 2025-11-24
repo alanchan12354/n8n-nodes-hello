@@ -46,6 +46,45 @@ export class Kimiyi implements INodeType {
 					},
 				],
 			},
+			{
+				displayName: 'Document Name',
+				name: 'documentName',
+				type: 'string',
+				default: '',
+				description: 'Name of the document to create',
+				displayOptions: {
+					show: {
+						operation: ['addDocument'],
+					},
+				},
+			},
+			{
+				displayName: 'Content',
+				name: 'content',
+				type: 'string',
+				typeOptions: {
+					rows: 5,
+				},
+				default: '',
+				description: 'Text content of the document',
+				displayOptions: {
+					show: {
+						operation: ['addDocument'],
+					},
+				},
+			},
+			{
+				displayName: 'File URL (Optional)',
+				name: 'fileUrl',
+				type: 'string',
+				default: '',
+				description: 'URL of a file to include in the document (optional)',
+				displayOptions: {
+					show: {
+						operation: ['addDocument'],
+					},
+				},
+			},
 		],
 	};
 
