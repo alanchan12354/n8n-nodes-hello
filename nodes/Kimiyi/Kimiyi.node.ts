@@ -12,7 +12,7 @@ export class Kimiyi implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Kimiyi',
 		name: 'kimiyi',
-		icon: 'file:kimiyi.svg',
+		icon: 'file:svgexport-3.svg',
 		group: ['transform'],
 		version: 1,
 		description: 'Kimiyi AI Node',
@@ -131,6 +131,77 @@ export class Kimiyi implements INodeType {
 					show: { operation: ['uploadDocument'] },
 				},
 			},
+			// ----------------------
+			// Update Document Fields
+			// ----------------------
+			{
+				displayName: 'Platform',
+				name: 'platform',
+				type: 'options',
+				default: 'Dropbox',
+				options: [
+					{ name: 'Dropbox', value: 'Dropbox' },
+					{ name: 'OneDrive', value: 'OneDrive' },
+					{ name: 'Google Drive', value: 'Google Drive' },
+				],
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['updateDocument'],
+					},
+				},
+			},
+			{
+				displayName: 'Document Link',
+				name: 'doc_link',
+				type: 'string',
+				default: '',
+				required: true,
+				placeholder: 'https://...',
+				displayOptions: {
+					show: {
+						operation: ['updateDocument'],
+					},
+				},
+			},
+			{
+				displayName: 'File Name',
+				name: 'file_name',
+				type: 'string',
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['updateDocument'],
+					},
+				},
+			},
+			{
+				displayName: 'File Type (MIME)',
+				name: 'file_type',
+				type: 'string',
+				default: '',
+				placeholder: 'application/pdf',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['updateDocument'],
+					},
+				},
+			},
+			{
+				displayName: 'File Size (Bytes)',
+				name: 'file_size',
+				type: 'number',
+				default: 0,
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['updateDocument'],
+					},
+				},
+			},
+
 
 		],
 	};
@@ -175,6 +246,38 @@ export class Kimiyi implements INodeType {
 
 			returnItems.push({ json: response });
 		}
+
+		// ========== UPDATE DOCUMENT ==========
+		if (operation === 'updateDocument') {
+
+			const platform  = this.getNodeParameter('platform', itemIndex) as string;
+			const doc_link  = this.getNodeParameter('doc_link', itemIndex) as string;
+			const file_name = this.getNodeParameter('file_name', itemIndex) as string;
+			const file_type = this.getNodeParameter('file_type', itemIndex) as string;
+			const file_size = this.getNodeParameter('file_size', itemIndex) as number;
+
+			const body = {
+				platform,
+				doc_link,
+				file_name,
+				file_type,
+				file_size,
+			};
+
+			const response = await this.helpers.httpRequest({
+				method: 'POST',
+				url: 'https://internalwebapi-dev.kimiyi.ai/api/Zapier/UpdateFile',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-API-KEY': apiKey,
+				},
+				body,
+				json: true,
+			});
+
+			returnItems.push({ json: response });
+		}
+
 
 		return this.prepareOutputData(returnItems);
 	}
